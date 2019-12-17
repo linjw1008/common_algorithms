@@ -1,6 +1,7 @@
 //快速排序
 
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -15,6 +16,31 @@ class QuickSort
         void sort_V2(int *array, int n)
         {
             quickSort_V2(array, 0, n - 1);
+        }
+
+        //用栈代替递归
+        void sort_V3(int *array, int n)
+        {
+            stack<pair<int, int>> quickSortStack;
+            quickSortStack.push(make_pair(0, n - 1));
+            
+            while (!quickSortStack.empty())
+            {
+                auto index = quickSortStack.top();
+                quickSortStack.pop();
+                
+                int pivotIndex = partition_V1(array, index.first, index.second);
+
+                if (index.first < pivotIndex - 1)
+                {
+                    quickSortStack.push(make_pair(index.first, pivotIndex - 1));
+                }
+
+                if (index.second > pivotIndex + 1)
+                {                
+                    quickSortStack.push(make_pair(pivotIndex + 1, index.second));
+                }
+            }
         }
 
     private:
@@ -145,7 +171,7 @@ int main()
     int array[] = {5, 7, 9, 4, 1, 3, 5, 11, 66, 44, 52, 98, 19, 67, 24, 0};
     //int array[] = {0,1,2,3,4,5,6,7,8,9};
     
-    quicksort.sort_V2(array, sizeof(array)/sizeof(int));
+    quicksort.sort_V3(array, sizeof(array)/sizeof(int));
 
     for (int i = 0; i < sizeof(array)/sizeof(int); i++)
     {
